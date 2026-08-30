@@ -4,3 +4,7 @@ voices-v1.0.bin
 
 # Generated output
 podcast.mp3
+previews/
+
+# Python virtual environment
+.venv/
