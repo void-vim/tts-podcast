@@ -1,0 +1,6 @@
+# Model weights (large binaries)
+kokoro-v1.0.onnx
+voices-v1.0.bin
+
+# Generated output
+podcast.mp3
