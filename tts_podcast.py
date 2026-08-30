@@ -12,8 +12,9 @@ import tempfile
 import soundfile as sf
 from kokoro_onnx import EspeakConfig, Kokoro
 
-SPEAKERS_A = {"RIAN", "BOB"}
-SPEAKERS_B = {"DINA", "ALICE"}
+# Hardcoded two-person conversation: exactly these speakers.
+SPEAKER_A = "RIAN"
+SPEAKER_B = "BOB"
 LINE_RE = re.compile(r"^([A-Za-z]+):[ \t]*(.*)$")
 
 
@@ -34,9 +35,9 @@ def parse_args() -> argparse.Namespace:
 
 
 def resolve_voice(speaker: str, voice_a: str, voice_b: str) -> str | None:
-    if speaker in SPEAKERS_A:
+    if speaker == SPEAKER_A:
         return voice_a
-    if speaker in SPEAKERS_B:
+    if speaker == SPEAKER_B:
         return voice_b
     return None
 
