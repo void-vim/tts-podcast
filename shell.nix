@@ -24,5 +24,8 @@ pkgs.mkShell {
         chatterbox-tts soundfile torchaudio
     fi
     source .venv/bin/activate
+
+    # Pre-fetch Chatterbox model weights into the HF cache (cached; fast on re-entry)
+    python3 -c "from huggingface_hub import snapshot_download; snapshot_download('ResembleAI/chatterbox')" || true
   '';
 }
