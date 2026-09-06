@@ -1,4 +1,4 @@
-Write a 40-60 second comedic, deadpan podcast script in the style of CONO (@cono).
+Write a 40-58 second comedic, deadpan podcast script in the style of CONO (@cono).
 
 FORMAT & STRUCTURE:
 - HOOK: One absurd, controversial, or rage-bait statement (max 7 words).
@@ -6,7 +6,7 @@ FORMAT & STRUCTURE:
 - Fast-paced dialogue between HOST and GUEST using this exact line format:
   HOOK: [Statement]
   HOST: [expr:0.0-1.0] [Direct hot take]
-  GUEST: [expr:0.0-1.0] [Skeptical/logical response]
+  GUEST: [expr:0.0-1.0] [Absurd/Rival hyper-optimization hot take]
 - EXPRESSION TAG: Every HOST and GUEST line MUST start with [expr:X] where X is a float from 0.0 to 1.0.
   - 0.0 = completely flat, monotone, deadpan
   - 0.5 = neutral, conversational
