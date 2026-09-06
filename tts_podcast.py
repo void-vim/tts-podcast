@@ -31,8 +31,8 @@ if getattr(perth, "PerthImplicitWatermarker", None) is None:
 
 
 # Hardcoded two-person conversation: exactly these speakers.
-SPEAKER_A = "RIAN"
-SPEAKER_B = "BOB"
+SPEAKER_A = "HOST"
+SPEAKER_B = "GUEST"
 LINE_RE = re.compile(r"^([A-Za-z]+):[ \t]*(.*)$")
 
 
@@ -45,8 +45,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("input", nargs="?", default="script.txt")
     p.add_argument("output", nargs="?", default="podcast.mp3")
     p.add_argument("--device", default="cpu")
-    p.add_argument("--ref-a", default=None, help="Reference wav to clone RIAN's voice")
-    p.add_argument("--ref-b", default=None, help="Reference wav to clone BOB's voice")
+    p.add_argument("--ref-a", default=None, help="Reference wav to clone HOST's voice")
+    p.add_argument("--ref-b", default=None, help="Reference wav to clone GUEST's voice"))
     p.add_argument("--exaggeration", type=float, default=0.5)
     p.add_argument("--temperature", type=float, default=0.8)
     return p.parse_args()
