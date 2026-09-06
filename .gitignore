@@ -12,5 +12,6 @@ __pycache__/
 
 # Input assets (not tracked in git)
 input/*.mp4
-input/*.txt
+# input/*.txt
+input/*.wav
 output/
