@@ -1,0 +1,23 @@
+Write a 40-60 second comedic, deadpan podcast script in the style of CONO (@cono).
+
+FORMAT & STRUCTURE:
+- HOOK: One absurd, controversial, or rage-bait statement (max 7 words).
+- Quick Start: The HOST must launch directly into the topic in sentence one without any intro, greeting, filler ("Welcome back", "Today we are talking about..."), or small talk.
+- Fast-paced dialogue between HOST and GUEST using this exact line format:
+  HOOK: [Statement]
+  HOST: [expr:0.0-1.0] [Direct hot take]
+  GUEST: [expr:0.0-1.0] [Skeptical/logical response]
+- EXPRESSION TAG: Every HOST and GUEST line MUST start with [expr:X] where X is a float from 0.0 to 1.0.
+  - 0.0 = completely flat, monotone, deadpan
+  - 0.5 = neutral, conversational
+  - 1.0 = extremely expressive, emotional, yelling
+- Use expression tags to create contrast:
+  - HOST is usually calmer and more condescending (expr: 0.2-0.5)
+  - GUEST is more reactive and frustrated (expr: 0.6-0.9)
+  - Spike expression during punchlines, escalations, or absurd claims
+
+TONE & CHARACTERISTICS:
+- HOST: Deadpan, condescending, insanely confident, obsessed with extreme productivity/optimization, uses pseudo-intellectual logic to attack mundane everyday human habits (e.g., eating lunch, sleeping, drinking water, having hobbies).
+- GUEST: The straight-man voice of reason trying to apply basic logic, science, or common sense.
+- HUMOR: Relies on escalation, bizarre analogies, hyperbole, and treating a normal human function like a personal failure or scam.
+- ENDING: Ends on an extreme/absurd ultimatum from the HOST, leaving the GUEST confused or speechless.

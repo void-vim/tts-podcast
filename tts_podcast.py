@@ -40,6 +40,7 @@ SPEAKER_A = "HOST"
 SPEAKER_B = "GUEST"
 LINE_RE = re.compile(r"^([A-Za-z]+):[ \t]*(.*)$")
 HOOK_RE = re.compile(r"^HOOK:[ \t]*(.*)$")
+EXPR_RE = re.compile(r"^\[expr:([0-9]*\.?[0-9]+)\]\s*(.*)$")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 
@@ -150,6 +151,15 @@ def main() -> None:
                 skipped += 1
                 continue
             speaker, text = m.group(1), m.group(2)
+            expr_m = EXPR_RE.match(text)
+            if expr_m:
+                try:
+                    expr_value = max(0.0, min(1.0, float(expr_m.group(1))))
+                except ValueError:
+                    expr_value = 0.5
+                text = expr_m.group(2)
+            else:
+                expr_value = 0.5
             if speaker not in (SPEAKER_A, SPEAKER_B):
                 log("WARN", f"Unknown speaker '{speaker}', skipping line")
                 skipped += 1
@@ -161,7 +171,7 @@ def main() -> None:
             wav = model.generate(
                 text,
                 audio_prompt_path=ref,
-                exaggeration=args.exaggeration,
+                exaggeration=expr_value,
                 temperature=args.temperature,
             )
             seg_duration = wav.shape[1] / sr
@@ -180,6 +190,7 @@ def main() -> None:
                 "speaker": speaker,
                 "start": seg_start,
                 "end": seg_end,
+                "expr": expr_value,
             })
             current_time = seg_end
             idx += 1
