@@ -40,6 +40,8 @@ SPEAKER_A = "HOST"
 SPEAKER_B = "GUEST"
 LINE_RE = re.compile(r"^([A-Za-z]+):[ \t]*(.*)$")
 
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+
 
 def log(level: str, msg: str) -> None:
     print(f"[{level}] {msg}")
@@ -120,8 +122,21 @@ def main() -> None:
     video_mode = args.bg is not None or args.hook is not None
     if video_mode and not args.bg:
         args.bg = pick_random_bg()
-    if video_mode and args.output.endswith(".mp3"):
-        args.output = args.output.rsplit(".", 1)[0] + ".mp4"
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    if args.hook:
+        base_name = sanitize_filename(args.hook)
+    else:
+        base_name = os.path.splitext(os.path.basename(args.output))[0]
+        if not base_name:
+            base_name = "podcast"
+
+    if video_mode:
+        video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
+        audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
+    else:
+        audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
+        video_output = None
 
     log("INFO", f"Loading Chatterbox on device={args.device}")
     model = ChatterboxTTS.from_pretrained(device=args.device)
@@ -187,25 +202,30 @@ def main() -> None:
 
     # Combine and save audio
     combined = torch.cat(segs, dim=1)
-    tmp_wav = args.output.rsplit(".", 1)[0] + ".tmp.wav"
+    tmp_wav = os.path.join(OUTPUT_DIR, f"{base_name}.tmp.wav")
     torchaudio.save(tmp_wav, combined.cpu(), sr)
 
     if video_mode:
-        final_output = args.output
         word_data = build_word_data(segments)
         hook = args.hook if args.hook else None
         render_video(
             audio_path=tmp_wav,
             bg_video=args.bg,
-            output_path=final_output,
+            output_path=video_output,
             word_data=word_data,
             start_time=0.0,
             end_time=current_time,
             hook_text=hook,
             font_dir=args.font_dir,
         )
+        to_mp3(tmp_wav, audio_output)
         os.remove(tmp_wav)
-        log("INFO", f"Output ready: {final_output} (segments={idx}, skipped={skipped})")
+        log("INFO", f"Video ready: {video_output} (segments={idx}, skipped={skipped})")
+        log("INFO", f"Audio ready: {audio_output}")
+    else:
+        to_mp3(tmp_wav, audio_output)
+        os.remove(tmp_wav)
+        log("INFO", f"Output ready: {audio_output} (segments={idx}, skipped={skipped})")
 
 
 if __name__ == "__main__":
