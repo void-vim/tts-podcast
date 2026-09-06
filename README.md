@@ -1,4 +1,4 @@
-# tts-story
+# tts-podcast
 
 Generate a two-person podcast dialogue script using local TTS.
 
