@@ -47,5 +47,3 @@ Place background videos in `input/`. Example files:
 
 - `input/minecraft.mp4`
 - `input/subwaysurf.mp4`
-
-Do not edit tracked files in `input/`.

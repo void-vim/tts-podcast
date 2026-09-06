@@ -2,8 +2,6 @@
 kokoro-v1.0.onnx
 voices-v1.0.bin
 
-script.txt
-
 # Generated output
 podcast.mp3
 previews/
@@ -11,3 +9,7 @@ previews/
 # Python virtual environment
 .venv/
 __pycache__/
+
+# Input assets (not tracked in git)
+input/*.mp4
+input/*.txt
