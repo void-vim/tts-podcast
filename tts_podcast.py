@@ -52,6 +52,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Chatterbox-TTS two-person podcast generator")
     p.add_argument("--ref-a", default=None, help="Reference wav to clone HOST's voice")
     p.add_argument("--ref-b", default=None, help="Reference wav to clone GUEST's voice")
+    p.add_argument("--device", default="cpu")
     p.add_argument("--exaggeration", type=float, default=0.5)
     p.add_argument("--temperature", type=float, default=0.8)
     p.add_argument("--bg", default=None, help="Background video path for video rendering")
@@ -121,6 +122,7 @@ def main() -> None:
         args.bg = pick_random_bg()
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    script_hook = None
     base_name = sanitize_filename(script_hook) if script_hook else "podcast"
 
     video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
@@ -136,7 +138,6 @@ def main() -> None:
     skipped = 0
     segments: list[dict] = []
     current_time = 0.0
-    script_hook = None
 
     with open(script_path, encoding="utf-8") as fh:
         for raw in fh:
