@@ -39,6 +39,7 @@ if getattr(perth, "PerthImplicitWatermarker", None) is None:
 SPEAKER_A = "HOST"
 SPEAKER_B = "GUEST"
 LINE_RE = re.compile(r"^([A-Za-z]+):[ \t]*(.*)$")
+HOOK_RE = re.compile(r"^HOOK:[ \t]*(.*)$")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 
@@ -49,15 +50,11 @@ def log(level: str, msg: str) -> None:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Chatterbox-TTS two-person podcast generator")
-    p.add_argument("input", nargs="?", default="script.txt")
-    p.add_argument("output", nargs="?", default="podcast.mp3")
-    p.add_argument("--device", default="cpu")
     p.add_argument("--ref-a", default=None, help="Reference wav to clone HOST's voice")
     p.add_argument("--ref-b", default=None, help="Reference wav to clone GUEST's voice")
     p.add_argument("--exaggeration", type=float, default=0.5)
     p.add_argument("--temperature", type=float, default=0.8)
     p.add_argument("--bg", default=None, help="Background video path for video rendering")
-    p.add_argument("--hook", default=None, help="Headline text shown at top of video")
     p.add_argument("--font-dir", default=None, help="Directory with custom font files")
     return p.parse_args()
 
@@ -111,32 +108,23 @@ def main() -> None:
     args = parse_args()
     validate_assets(args.ref_a, args.ref_b)
 
-    if not os.path.isfile(args.input):
-        log("ERROR", f"Input file not found: {args.input}")
+    script_path = os.path.join("input", "script.txt")
+    if not os.path.isfile(script_path):
+        log("ERROR", f"Input file not found: {script_path}")
         raise SystemExit(1)
 
     if not args.ref_a and not args.ref_b:
         log("WARN", "No reference clips given: both speakers will use the default voice")
 
-    # If video mode is requested, ensure output extension is .mp4
-    video_mode = args.bg is not None or args.hook is not None
-    if video_mode and not args.bg:
+    video_mode = True
+    if not args.bg:
         args.bg = pick_random_bg()
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    if args.hook:
-        base_name = sanitize_filename(args.hook)
-    else:
-        base_name = os.path.splitext(os.path.basename(args.output))[0]
-        if not base_name:
-            base_name = "podcast"
+    base_name = sanitize_filename(script_hook) if script_hook else "podcast"
 
-    if video_mode:
-        video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
-        audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
-    else:
-        audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
-        video_output = None
+    video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
+    audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
 
     log("INFO", f"Loading Chatterbox on device={args.device}")
     model = ChatterboxTTS.from_pretrained(device=args.device)
@@ -146,13 +134,18 @@ def main() -> None:
     gap = torch.zeros(int(sr * 0.35)).unsqueeze(0)
     idx = 0
     skipped = 0
-    segments: list[dict] = []  # track timing for video render
+    segments: list[dict] = []
     current_time = 0.0
+    script_hook = None
 
-    with open(args.input, encoding="utf-8") as fh:
+    with open(script_path, encoding="utf-8") as fh:
         for raw in fh:
             line = raw.rstrip("\n")
             if not line.strip():
+                continue
+            hook_m = HOOK_RE.match(line)
+            if hook_m:
+                script_hook = hook_m.group(1).strip()
                 continue
             m = LINE_RE.match(line)
             if not m:
@@ -197,35 +190,29 @@ def main() -> None:
             log("INFO", f"Segment {idx} ({speaker}/{label}) written")
 
     if idx == 0:
-        log("ERROR", f"No valid dialogue segments found in {args.input}")
+        log("ERROR", f"No valid dialogue segments found in {script_path}")
         raise SystemExit(1)
 
-    # Combine and save audio
     combined = torch.cat(segs, dim=1)
     tmp_wav = os.path.join(OUTPUT_DIR, f"{base_name}.tmp.wav")
     torchaudio.save(tmp_wav, combined.cpu(), sr)
 
-    if video_mode:
-        word_data = build_word_data(segments)
-        hook = args.hook if args.hook else None
-        render_video(
-            audio_path=tmp_wav,
-            bg_video=args.bg,
-            output_path=video_output,
-            word_data=word_data,
-            start_time=0.0,
-            end_time=current_time,
-            hook_text=hook,
-            font_dir=args.font_dir,
-        )
-        to_mp3(tmp_wav, audio_output)
-        os.remove(tmp_wav)
-        log("INFO", f"Video ready: {video_output} (segments={idx}, skipped={skipped})")
-        log("INFO", f"Audio ready: {audio_output}")
-    else:
-        to_mp3(tmp_wav, audio_output)
-        os.remove(tmp_wav)
-        log("INFO", f"Output ready: {audio_output} (segments={idx}, skipped={skipped})")
+    word_data = build_word_data(segments)
+    hook = script_hook
+    render_video(
+        audio_path=tmp_wav,
+        bg_video=args.bg,
+        output_path=video_output,
+        word_data=word_data,
+        start_time=0.0,
+        end_time=current_time,
+        hook_text=hook,
+        font_dir=args.font_dir,
+    )
+    to_mp3(tmp_wav, audio_output)
+    os.remove(tmp_wav)
+    log("INFO", f"Video ready: {video_output} (segments={idx}, skipped={skipped})")
+    log("INFO", f"Audio ready: {audio_output}")
 
 
 if __name__ == "__main__":
