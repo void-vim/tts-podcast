@@ -123,10 +123,6 @@ def main() -> None:
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     script_hook = None
-    base_name = sanitize_filename(script_hook) if script_hook else "podcast"
-
-    video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
-    audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
 
     log("INFO", f"Loading Chatterbox on device={args.device}")
     model = ChatterboxTTS.from_pretrained(device=args.device)
@@ -193,6 +189,10 @@ def main() -> None:
     if idx == 0:
         log("ERROR", f"No valid dialogue segments found in {script_path}")
         raise SystemExit(1)
+
+    base_name = sanitize_filename(script_hook) if script_hook else "podcast"
+    video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
+    audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
 
     combined = torch.cat(segs, dim=1)
     tmp_wav = os.path.join(OUTPUT_DIR, f"{base_name}.tmp.wav")
