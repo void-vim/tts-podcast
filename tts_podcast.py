@@ -21,7 +21,7 @@ import torchaudio
 import perth
 from chatterbox.tts import ChatterboxTTS
 
-from video_renderer import build_word_data, render_video
+from video_renderer import build_word_data, render_video, sanitize_filename
 
 
 class _NoWatermarker:
