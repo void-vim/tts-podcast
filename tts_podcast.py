@@ -4,6 +4,9 @@
 Chatterbox has a single built-in expressive voice. To get two distinct speakers,
 pass --ref-a / --ref-b with short reference clips to clone each voice. With no
 references, both speakers use the built-in default voice.
+
+Video mode (--bg): composites the generated audio over a background video with
+karaoke-style ASS subtitles and an optional hook banner.
 """
 
 import argparse
@@ -17,6 +20,8 @@ import torchaudio
 
 import perth
 from chatterbox.tts import ChatterboxTTS
+
+from video_renderer import build_word_data, render_video
 
 
 class _NoWatermarker:
@@ -46,9 +51,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("output", nargs="?", default="podcast.mp3")
     p.add_argument("--device", default="cpu")
     p.add_argument("--ref-a", default=None, help="Reference wav to clone HOST's voice")
-    p.add_argument("--ref-b", default=None, help="Reference wav to clone GUEST's voice"))
+    p.add_argument("--ref-b", default=None, help="Reference wav to clone GUEST's voice")
     p.add_argument("--exaggeration", type=float, default=0.5)
     p.add_argument("--temperature", type=float, default=0.8)
+    p.add_argument("--bg", default=None, help="Background video path for video rendering")
+    p.add_argument("--hook", default=None, help="Headline text shown at top of video")
+    p.add_argument("--font-dir", default=None, help="Directory with custom font files")
     return p.parse_args()
 
 
@@ -65,6 +73,22 @@ def validate_assets(ref_a: str | None, ref_b: str | None) -> None:
         if path and not os.path.isfile(path):
             log("ERROR", f"Reference audio not found: {path}")
             raise SystemExit(1)
+
+
+def pick_random_bg() -> str:
+    input_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
+    if not os.path.isdir(input_dir):
+        log("ERROR", f"Input directory not found: {input_dir}")
+        raise SystemExit(1)
+    mp4s = [f for f in os.listdir(input_dir) if f.lower().endswith(".mp4")]
+    if not mp4s:
+        log("ERROR", "No .mp4 files found in input/ folder. Add a background video or pass --bg.")
+        raise SystemExit(1)
+    import random
+    choice = random.choice(mp4s)
+    path = os.path.join(input_dir, choice)
+    log("INFO", f"Auto-selected background video: {choice}")
+    return path
 
 
 def to_mp3(wav_path: str, output: str) -> None:
@@ -92,14 +116,23 @@ def main() -> None:
     if not args.ref_a and not args.ref_b:
         log("WARN", "No reference clips given: both speakers will use the default voice")
 
+    # If video mode is requested, ensure output extension is .mp4
+    video_mode = args.bg is not None or args.hook is not None
+    if video_mode and not args.bg:
+        args.bg = pick_random_bg()
+    if video_mode and args.output.endswith(".mp3"):
+        args.output = args.output.rsplit(".", 1)[0] + ".mp4"
+
     log("INFO", f"Loading Chatterbox on device={args.device}")
     model = ChatterboxTTS.from_pretrained(device=args.device)
     sr = model.sr
 
     segs: list[torch.Tensor] = []
-    gap = torch.zeros(int(sr * 0.35)).unsqueeze(0)  # short pause between turns
+    gap = torch.zeros(int(sr * 0.35)).unsqueeze(0)
     idx = 0
     skipped = 0
+    segments: list[dict] = []  # track timing for video render
+    current_time = 0.0
 
     with open(args.input, encoding="utf-8") as fh:
         for raw in fh:
@@ -126,9 +159,24 @@ def main() -> None:
                 exaggeration=args.exaggeration,
                 temperature=args.temperature,
             )
+            seg_duration = wav.shape[1] / sr
+            seg_start = current_time
+            seg_end = current_time + seg_duration
+
             if segs:
                 segs.append(gap)
+                current_time += gap.shape[1] / sr
+                seg_start = current_time
+                seg_end = current_time + seg_duration
+
             segs.append(wav)
+            segments.append({
+                "text": text,
+                "speaker": speaker,
+                "start": seg_start,
+                "end": seg_end,
+            })
+            current_time = seg_end
             idx += 1
             label = os.path.basename(ref) if ref else "default"
             log("INFO", f"Segment {idx} ({speaker}/{label}) written")
@@ -137,12 +185,27 @@ def main() -> None:
         log("ERROR", f"No valid dialogue segments found in {args.input}")
         raise SystemExit(1)
 
+    # Combine and save audio
     combined = torch.cat(segs, dim=1)
     tmp_wav = args.output.rsplit(".", 1)[0] + ".tmp.wav"
     torchaudio.save(tmp_wav, combined.cpu(), sr)
-    to_mp3(tmp_wav, args.output)
-    os.remove(tmp_wav)
-    log("INFO", f"Output ready: {args.output} (segments={idx}, skipped={skipped})")
+
+    if video_mode:
+        final_output = args.output
+        word_data = build_word_data(segments)
+        hook = args.hook if args.hook else None
+        render_video(
+            audio_path=tmp_wav,
+            bg_video=args.bg,
+            output_path=final_output,
+            word_data=word_data,
+            start_time=0.0,
+            end_time=current_time,
+            hook_text=hook,
+            font_dir=args.font_dir,
+        )
+        os.remove(tmp_wav)
+        log("INFO", f"Output ready: {final_output} (segments={idx}, skipped={skipped})")
 
 
 if __name__ == "__main__":
