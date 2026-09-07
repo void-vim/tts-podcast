@@ -109,8 +109,7 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Karaoke,{font},70,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,5,10,10,10,1
-Style: HookBox,{font},70,&HFFFFFF,&HFFFFFF,&HFFFFFF,&HFFFFFF,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
-Style: HookText,{font},{hook_fontsize},&H00000000,&H00000000,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,0,0,0,1
+Style: HookText,{font},{hook_fontsize},&H000000,&H000000,&HFFFFFF,&H00000000,-1,0,0,0,100,100,0,0,1,20,0,8,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -157,12 +156,6 @@ def _build_hook_events(hook_text: str | None, duration: float) -> list[str]:
     box_h = line_height * line_count + padding_y * 2
     box_x = (1080 - box_w) / 2
     box_y = 90
-
-    box_path = f"m 0 0 l {box_w:.0f} 0 l {box_w:.0f} {box_h:.0f} l 0 {box_h:.0f}"
-    events.append(
-        f"Dialogue: 0,0:00:00.00,{hook_end},HookBox,,0,0,0,,"
-        f"{{\\an7\\pos({box_x:.0f},{box_y:.0f})\\p1}}{box_path}{{\\p0}}"
-    )
 
     ass_text = escape_ass_text(wrapped).replace("\n", "\\N")
     text_x = 1080 / 2
