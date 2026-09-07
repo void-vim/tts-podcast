@@ -1,4 +1,4 @@
-"""Video renderer: ASS subtitles, hook banner, background video composition.
+"""Video renderer: ASS subtitles, background video composition.
 
 Generates word-level timestamps from TTS segments, builds a karaoke-style
 ASS file, and composites it over a looping 9:16 background video via ffmpeg.
@@ -108,7 +108,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Karaoke,{font},70,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,5,10,10,10,1
+Style: Karaoke,{font},75,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,5,10,10,10,1
 Style: HookText,{font},{hook_fontsize},&H000000,&H000000,&HFFFFFF,&H00000000,-1,0,0,0,100,100,0,0,1,20,0,8,0,0,0,1
 
 [Events]

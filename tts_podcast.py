@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""Two-person podcast generator using Chatterbox TTS (local, free, natural).
+"""Two-person podcast generator using Chatterbox TTS.
 
 Chatterbox has a single built-in expressive voice. To get two distinct speakers,
 pass --ref-a / --ref-b with short reference clips to clone each voice. With no
 references, both speakers use the built-in default voice.
-
-Video mode (--bg): composites the generated audio over a background video with
-karaoke-style ASS subtitles and an optional hook banner.
 """
 
 import argparse
