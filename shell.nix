@@ -18,12 +18,15 @@ pkgs.mkShell {
   shellHook = ''
     export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.portaudio}/lib:$LD_LIBRARY_PATH"
 
-    if [ ! -d .venv ]; then
+    expected_venv="$(pwd)/.venv"
+    if [ ! -d .venv ] || [ "$(grep -o "VIRTUAL_ENV='[^']*'" .venv/bin/activate | cut -d\' -f2)" != "$expected_venv" ]; then
+      rm -rf .venv
       uv venv --python ${pkgs.python312}/bin/python .venv
-      uv pip install --python .venv/bin/python \
-        chatterbox-tts soundfile torchaudio
     fi
     source .venv/bin/activate
+
+    uv pip install --python .venv/bin/python \
+      chatterbox-tts soundfile torchaudio torch huggingface_hub perth
 
     # Pre-fetch Chatterbox model weights into the HF cache (cached; fast on re-entry)
     python3 -c "from huggingface_hub import snapshot_download; snapshot_download('ResembleAI/chatterbox')" || true
