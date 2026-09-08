@@ -1,0 +1,58 @@
+[
+{
+"hook": "Name ten books.",
+"script": [
+"HOST: [expr:0.2] Name ten books.",
+"GUEST: [expr:0.6] What? Like, right now? Out of nowhere?",
+"HOST: [expr:0.1] You can't name ten books. That is very concerning.",
+"GUEST: [expr:0.7] I can name ten books, I just wasn't ready for a pop quiz. Harry Potter, Lord of the Rings...",
+"HOST: [expr:0.1] Those are movies. You are naming movies.",
+"GUEST: [expr:0.8] They were books first. Everyone knows that.",
+"HOST: [expr:0.3] Name a book that isn't a movie.",
+"GUEST: [expr:0.5] Uh, The Catcher in the Rye.",
+"HOST: [expr:0.2] Why are you catching rye? Are you a farmer?",
+"GUEST: [expr:0.7] No, it's just the title of the book. I didn't write it.",
+"HOST: [expr:0.1] So you claim to read books about farmers catching grain, but you can't name ten books.",
+"GUEST: [expr:0.8] I literally just named three.",
+"HOST: [expr:0.1] You named two movies and a farming manual."
+]
+},
+{
+"hook": "Why did you lie about your name?",
+"script": [
+"HOST: [expr:0.2] Why did you lie about your name?",
+"GUEST: [expr:0.5] I didn't lie. My name is Tyler.",
+"HOST: [expr:0.1] That is a completely made up name. You are making it up.",
+"GUEST: [expr:0.7] No it isn't. Lots of people are named Tyler.",
+"HOST: [expr:0.1] Name one.",
+"GUEST: [expr:0.6] Me. Tyler the Creator. Tyler Perry.",
+"HOST: [expr:0.3] You are definitely not Tyler the Creator.",
+"GUEST: [expr:0.8] I didn't say I was him. I'm just giving examples.",
+"HOST: [expr:0.2] So you admit you are attempting to steal his identity on camera.",
+"GUEST: [expr:0.9] No, we just share a first name. It is common.",
+"HOST: [expr:0.1] It is illegal to have the same name as a creator if you do not create.",
+"GUEST: [expr:0.8] That is absolutely not a real law.",
+"HOST: [expr:0.2] Have you been arrested for identity theft yet?",
+"GUEST: [expr:0.7] For being named Tyler? No.",
+"HOST: [expr:0.1] We will see."
+]
+},
+{
+"hook": "Do you close your eyes when you sleep?",
+"script": [
+"HOST: [expr:0.2] Do you close your eyes when you sleep?",
+"GUEST: [expr:0.6] Uh, yeah. Doesn't everyone?",
+"HOST: [expr:0.1] Why are you hiding your eyes? What are you afraid of seeing?",
+"GUEST: [expr:0.8] I'm not hiding them. It's just biological. You have to close your eyes to sleep.",
+"HOST: [expr:0.1] I do not. I am always watching.",
+"GUEST: [expr:0.9] You sleep with your eyes open?",
+"HOST: [expr:0.3] Do not change the subject. Why are you unconscious for eight hours every day?",
+"GUEST: [expr:0.7] Because my body needs rest. It's totally normal.",
+"HOST: [expr:0.2] That is a third of your life wasted doing absolutely nothing. Very lazy.",
+"GUEST: [expr:0.8] It's not lazy, it's how humans survive.",
+"HOST: [expr:0.1] Have you tried simply staying awake and being productive?",
+"GUEST: [expr:0.9] You would literally die if you never slept.",
+"HOST: [expr:0.1] I am still here."
+]
+}
+]

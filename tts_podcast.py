@@ -57,7 +57,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--temperature", type=float, default=0.8)
     p.add_argument("--bg", default=None, help="Background video path for video rendering")
     p.add_argument("--font-dir", default=None, help="Directory with custom font files")
-    p.add_argument("--batch-file", default="batch.json", help="Path to batch JSON file")
+    p.add_argument("--batch-file", default="input/batch.json", help="Path to batch JSON file")
     return p.parse_args()
 
 
