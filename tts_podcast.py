@@ -7,10 +7,12 @@ references, both speakers use the built-in default voice.
 """
 
 import argparse
+import json
 import os
 import re
 import shutil
 import subprocess
+import time
 
 import torch
 import torchaudio
@@ -55,6 +57,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--temperature", type=float, default=0.8)
     p.add_argument("--bg", default=None, help="Background video path for video rendering")
     p.add_argument("--font-dir", default=None, help="Directory with custom font files")
+    p.add_argument("--batch-file", default="batch.json", help="Path to batch JSON file")
     return p.parse_args()
 
 
@@ -101,31 +104,14 @@ def to_mp3(wav_path: str, output: str) -> None:
     if res.returncode != 0:
         log("ERROR", "ffmpeg mp3 encode failed")
         raise SystemExit(1)
-
-
-def main() -> None:
-    args = parse_args()
-    validate_assets(args.ref_a, args.ref_b)
-
-    script_path = os.path.join("input", "script.txt")
-    if not os.path.isfile(script_path):
-        log("ERROR", f"Input file not found: {script_path}")
-        raise SystemExit(1)
-
-    if not args.ref_a and not args.ref_b:
-        log("WARN", "No reference clips given: both speakers will use the default voice")
-
-    video_mode = True
-    if not args.bg:
-        args.bg = pick_random_bg()
-
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    script_hook = None
-
-    log("INFO", f"Loading Chatterbox on device={args.device}")
-    model = ChatterboxTTS.from_pretrained(device=args.device)
-    sr = model.sr
-
+def _run_podcast_generation(
+    script_lines: list[str],
+    script_hook: str | None,
+    output_basename: str | None,
+    args: argparse.Namespace,
+    model: ChatterboxTTS,
+    sr: int,
+) -> tuple[str, str] | None:
     segs: list[torch.Tensor] = []
     gap = torch.zeros(int(sr * 0.35)).unsqueeze(0)
     idx = 0
@@ -133,72 +119,72 @@ def main() -> None:
     segments: list[dict] = []
     current_time = 0.0
 
-    with open(script_path, encoding="utf-8") as fh:
-        for raw in fh:
-            line = raw.rstrip("\n")
-            if not line.strip():
-                continue
-            hook_m = HOOK_RE.match(line)
-            if hook_m:
+    for raw in script_lines:
+        line = raw.rstrip("\n")
+        if not line.strip():
+            continue
+        hook_m = HOOK_RE.match(line)
+        if hook_m:
+            if not script_hook:
                 script_hook = hook_m.group(1).strip()
-                continue
-            m = LINE_RE.match(line)
-            if not m:
-                log("WARN", f"Skipping unparsed line: {line}")
-                skipped += 1
-                continue
-            speaker, text = m.group(1), m.group(2)
-            expr_m = EXPR_RE.match(text)
-            if expr_m:
-                try:
-                    expr_value = max(0.0, min(1.0, float(expr_m.group(1))))
-                except ValueError:
-                    expr_value = 0.5
-                text = expr_m.group(2)
-            else:
+            continue
+        m = LINE_RE.match(line)
+        if not m:
+            log("WARN", f"Skipping unparsed line: {line}")
+            skipped += 1
+            continue
+        speaker, text = m.group(1), m.group(2)
+        expr_m = EXPR_RE.match(text)
+        if expr_m:
+            try:
+                expr_value = max(0.0, min(1.0, float(expr_m.group(1))))
+            except ValueError:
                 expr_value = 0.5
-            if speaker not in (SPEAKER_A, SPEAKER_B):
-                log("WARN", f"Unknown speaker '{speaker}', skipping line")
-                skipped += 1
-                continue
-            if not text.strip():
-                continue
+            text = expr_m.group(2)
+        else:
+            expr_value = 0.5
+        if speaker not in (SPEAKER_A, SPEAKER_B):
+            log("WARN", f"Unknown speaker '{speaker}', skipping line")
+            skipped += 1
+            continue
+        if not text.strip():
+            continue
 
-            ref = resolve_ref(speaker, args.ref_a, args.ref_b)
-            wav = model.generate(
-                text,
-                audio_prompt_path=ref,
-                exaggeration=expr_value,
-                temperature=args.temperature,
-            )
-            seg_duration = wav.shape[1] / sr
+        ref = resolve_ref(speaker, args.ref_a, args.ref_b)
+        wav = model.generate(
+            text,
+            audio_prompt_path=ref,
+            exaggeration=expr_value,
+            temperature=args.temperature,
+        )
+        seg_duration = wav.shape[1] / sr
+        seg_start = current_time
+        seg_end = current_time + seg_duration
+
+        if segs:
+            segs.append(gap)
+            current_time += gap.shape[1] / sr
             seg_start = current_time
             seg_end = current_time + seg_duration
 
-            if segs:
-                segs.append(gap)
-                current_time += gap.shape[1] / sr
-                seg_start = current_time
-                seg_end = current_time + seg_duration
-
-            segs.append(wav)
-            segments.append({
-                "text": text,
-                "speaker": speaker,
-                "start": seg_start,
-                "end": seg_end,
-                "expr": expr_value,
-            })
-            current_time = seg_end
-            idx += 1
-            label = os.path.basename(ref) if ref else "default"
-            log("INFO", f"Segment {idx} ({speaker}/{label}) written")
+        segs.append(wav)
+        segments.append({
+            "text": text,
+            "speaker": speaker,
+            "start": seg_start,
+            "end": seg_end,
+            "expr": expr_value,
+        })
+        current_time = seg_end
+        idx += 1
+        label = os.path.basename(ref) if ref else "default"
+        log("INFO", f"Segment {idx} ({speaker}/{label}) written")
 
     if idx == 0:
-        log("ERROR", f"No valid dialogue segments found in {script_path}")
-        raise SystemExit(1)
+        log("ERROR", "No valid dialogue segments found")
+        return None
 
-    base_name = sanitize_filename(script_hook) if script_hook else "podcast"
+    base_name = output_basename or (sanitize_filename(script_hook) if script_hook else "podcast")
     video_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
     audio_output = os.path.join(OUTPUT_DIR, f"{base_name}.mp3")
 
@@ -222,6 +208,55 @@ def main() -> None:
     os.remove(tmp_wav)
     log("INFO", f"Video ready: {video_output} (segments={idx}, skipped={skipped})")
     log("INFO", f"Audio ready: {audio_output}")
+    return video_output, audio_output
+
+
+def main() -> None:
+    args = parse_args()
+    validate_assets(args.ref_a, args.ref_b)
+
+    if not args.bg:
+        args.bg = pick_random_bg()
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    log("INFO", f"Loading Chatterbox on device={args.device}")
+    model = ChatterboxTTS.from_pretrained(device=args.device)
+    sr = model.sr
+
+    batch_path = args.batch_file
+    if not os.path.isfile(batch_path):
+        log("ERROR", f"Batch file not found: {batch_path}")
+        raise SystemExit(1)
+    with open(batch_path, encoding="utf-8") as fh:
+        try:
+            batch_items = json.load(fh)
+        except json.JSONDecodeError as exc:
+            log("ERROR", f"Invalid JSON in batch file: {exc}")
+            raise SystemExit(1)
+    if not isinstance(batch_items, list):
+        log("ERROR", "Batch file must contain a JSON array")
+        raise SystemExit(1)
+
+    total = len(batch_items)
+    for i, item in enumerate(batch_items):
+        if not isinstance(item, dict):
+            log("WARN", f"Skipping non-object batch item at index {i}")
+            continue
+        hook = item.get("hook") or ""
+        script_lines = item.get("script", [])
+        if not isinstance(script_lines, list) or not script_lines:
+            log("WARN", f"Skipping batch item {i+1}: empty or missing script")
+            continue
+
+        base_name = sanitize_filename(hook) if hook else f"batch_{i+1}"
+        log("INFO", f"Batch item {i+1}/{total}: {base_name}")
+
+        _run_podcast_generation(script_lines, hook, base_name, args, model, sr)
+
+        if i < total - 1:
+            log("INFO", "Waiting 60s before next batch item...")
+            time.sleep(60)
 
 
 if __name__ == "__main__":

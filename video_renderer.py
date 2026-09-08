@@ -21,7 +21,7 @@ def log(level: str, msg: str) -> None:
 HOOK_FONTSIZE = 80
 WORDS_PER_CHUNK = 3
 FONT_NAME = "Coolvetica"
-WATERMARK_TEXT = ""
+WATERMARK_TEXT = "uncookedtakes"
 
 # Default font dir sits next to this file under input/font/
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
