@@ -280,6 +280,7 @@ def render_video(
     end_time: float,
     hook_text: str | None = None,
     font_dir: str | None = None,
+    debug: bool = False,
 ) -> str:
     duration = end_time - start_time
     os.makedirs(os.path.dirname(os.path.abspath(output_path)) or ".", exist_ok=True)
@@ -297,9 +298,11 @@ def render_video(
         temp_ass_file, output_path, fonts_dir=font_dir or DEFAULT_FONT_DIR,
     )
 
-    if os.path.exists(temp_ass_file):
+    if not debug and os.path.exists(temp_ass_file):
         os.remove(temp_ass_file)
-        log("INFO", f"Removed temp subtitle file: {temp_ass_file}")
+        log("INFO", f"Removed temp subtitle file (DEBUG=False): {temp_ass_file}")
+    else:
+        log("INFO", f"Subtitle file kept (DEBUG=True): {temp_ass_file}")
 
     log("INFO", f"Video processing completed successfully: {output_path}")
     return output_path

@@ -58,6 +58,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--bg", default=None, help="Background video path for video rendering")
     p.add_argument("--font-dir", default=None, help="Directory with custom font files")
     p.add_argument("--batch-file", default="input/batch.json", help="Path to batch JSON file")
+    p.add_argument("--debug", action="store_true", help="Keep intermediate files (.mp3 audio, .ass subtitles)")
     return p.parse_args()
 
 
@@ -203,11 +204,18 @@ def _run_podcast_generation(
         end_time=current_time,
         hook_text=hook,
         font_dir=args.font_dir,
+        debug=args.debug,
     )
     to_mp3(tmp_wav, audio_output)
     os.remove(tmp_wav)
+
+    if not args.debug:
+        if os.path.exists(audio_output):
+            os.remove(audio_output)
+            log("INFO", f"Removed audio result (DEBUG=False): {audio_output}")
+    else:
+        log("INFO", f"Audio result kept (DEBUG=True): {audio_output}")
     log("INFO", f"Video ready: {video_output} (segments={idx}, skipped={skipped})")
-    log("INFO", f"Audio ready: {audio_output}")
     return video_output, audio_output
 
 
