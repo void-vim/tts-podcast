@@ -1,29 +1,20 @@
 [
 {
-"hook": "Why do our muscles feel sore days after working out?",
+"hook": "How does your phone screen know where your finger is?",
 "script": [
-"GUEST: [expr:0.5] Petter, why do my legs hurt two days after lifting?",
-"HOST: [expr:0.7] That is delayed onset muscle soreness, or DOMS! When you exercise, you create microscopic tears in your muscle fibers. It sounds intense, but it is actually awesome!",
-"GUEST: [expr:0.6] Micro-tears sound pretty painful though!",
-"HOST: [expr:0.8] Think of your body like a construction crew! Day one is clearing out old structures. Day two is when the crew brings in trucks of protein to rebuild stronger walls. The inflammation during rebuilding causes that deep ache. So when you waddle down stairs, just remember your body is upgrading itself!"
+"GUEST: [expr:0.5] How do touchscreens pick up my fingers but ignore my gloves?",
+"HOST: [expr:0.7] Your screen is actually a tiny grid packed with microscopic electrical fields, constantly holding a gentle static charge!",
+"GUEST: [expr:0.4] So my hands are stealing electricity?",
+"HOST: [expr:0.8] Haha, exactly! Your skin naturally conducts electricity. When you tap the glass, your finger steals a tiny bit of charge from that exact spot, and the phone calculates the drop to locate your tap instantly!"
 ]
 },
 {
-"hook": "How do noise-canceling headphones actually block sound?",
+"hook": "What actually happens when you clear your browser cache?",
 "script": [
-"GUEST: [expr:0.5] Hey Petter, how do these headphones cancel noise?",
-"HOST: [expr:0.7] Oh, it is total physics magic! Tiny microphones on the outside listen to ambient sounds, like a roaring plane engine, and instantly analyze the sound wave.",
-"GUEST: [expr:0.6] So they just play loud music over it?",
-"HOST: [expr:0.8] Not at all! The headphones create an exact opposite sound wave, flipped completely upside down. When a peak wave hits a valley wave, they clash and cancel each other out to absolute zero sound! It is literally math fighting noise in real time!"
-]
-},
-{
-"hook": "Why does a brain freeze happen when eating cold food?",
-"script": [
-"GUEST: [expr:0.5] Petter, what causes an instant brain freeze?",
-"HOST: [expr:0.7] It is your body throwing a total false alarm! When icy slush hits the roof of your mouth, the sudden temperature drop startles sensitive blood vessels.",
-"GUEST: [expr:0.6] Do the blood vessels freeze up?",
-"HOST: [expr:0.8] They slam shut, then rapidly dilate to pump warm blood back in! That rapid swelling triggers a major nerve behind your palate. But here is the funny part: that nerve gets confused and tells your brain that your forehead hurts instead! Pressing your warm tongue to your palate resets the system!"
+"GUEST: [expr:0.5] Everyone says clear your cache to fix websites, but what does that mean?",
+"HOST: [expr:0.7] Imagine your browser keeps a huge backpack full of printed photos of every website you visit so it doesn't have to redraw them later.",
+"GUEST: [expr:0.4] Ah, so clearing it empties the backpack?",
+"HOST: [expr:0.8] Spot on! It dumps out all the outdated photos and forces the browser to fetch fresh, up-to-date versions directly from the web server. That clears out glitchy bugs in seconds!"
 ]
 }
 ]
