@@ -142,7 +142,7 @@ def _build_hook_events(hook_text: str | None, duration: float) -> list[str]:
         return []
     events: list[str] = []
     hook_end = format_ass_timestamp(duration)
-    wrapped = wrap_hook_text(hook_text)
+    wrapped = wrap_hook_text(hook_text.upper())
     lines = wrapped.split("\n")
     line_count = len(lines)
     fontsize = HOOK_FONTSIZE
@@ -185,7 +185,7 @@ def _build_karaoke_events(
 
             parts: list[str] = []
             for k, w in enumerate(chunk):
-                word_text = escape_ass_text(w["text"])
+                word_text = escape_ass_text(w["text"].upper())
                 if k == j:
                     parts.append(f"{{\\c&H0000FFFF&\\fs72}}{word_text}{{\\r}}")
                 else:

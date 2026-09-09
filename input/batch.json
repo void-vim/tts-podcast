@@ -1,20 +1,9 @@
 [
 {
-"hook": "How does your phone screen know where your finger is?",
+"hook": "Why does cutting a fresh onion make you weep like a movie character?",
 "script": [
-"GUEST: [expr:0.5] How do touchscreens pick up my fingers but ignore my gloves?",
-"HOST: [expr:0.7] Your screen is actually a tiny grid packed with microscopic electrical fields, constantly holding a gentle static charge!",
-"GUEST: [expr:0.4] So my hands are stealing electricity?",
-"HOST: [expr:0.8] Haha, exactly! Your skin naturally conducts electricity. When you tap the glass, your finger steals a tiny bit of charge from that exact spot, and the phone calculates the drop to locate your tap instantly!"
-]
-},
-{
-"hook": "What actually happens when you clear your browser cache?",
-"script": [
-"GUEST: [expr:0.5] Everyone says clear your cache to fix websites, but what does that mean?",
-"HOST: [expr:0.7] Imagine your browser keeps a huge backpack full of printed photos of every website you visit so it doesn't have to redraw them later.",
-"GUEST: [expr:0.4] Ah, so clearing it empties the backpack?",
-"HOST: [expr:0.8] Spot on! It dumps out all the outdated photos and forces the browser to fetch fresh, up-to-date versions directly from the web server. That clears out glitchy bugs in seconds!"
+"GUEST: [expr:0.4] Why do onions make me burst into tears every single time I cook?",
+"HOST: [expr:0.6] It's self-defense! When you slice an onion, you rupture its plant cells, mixing quiet enzymes into a stingy chemical gas."
 ]
 }
 ]
