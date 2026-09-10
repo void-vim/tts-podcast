@@ -7,6 +7,10 @@ an install hint so the caller can fail fast.
 import os
 import sys
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # ---------------------------------------------------------------------------
 # Lazy imports with hints
 # ---------------------------------------------------------------------------
@@ -49,11 +53,9 @@ def upload_to_youtube(
     video_path: str,
     title: str,
     description: str = "",
-    tags: list[str] | None = None,
-    category_id: str = "22",  # People & Blogs
+    credentials_path: str = os.environ.get("YOUTUBE_CREDENTIALS_PATH", "credentials.json"),
+    token_path: str = os.environ.get("YOUTUBE_TOKEN_PATH", "token.json"),
     privacy_status: str = "private",
-    credentials_path: str = "credentials.json",
-    token_path: str = "token.json",
 ) -> str:
     """Upload a video to YouTube via OAuth2.
 
@@ -97,8 +99,7 @@ def upload_to_youtube(
         "snippet": {
             "title": title,
             "description": description,
-            "tags": tags or [],
-            "categoryId": category_id,
+            "categoryId": "22",
         },
         "status": {
             "privacyStatus": privacy_status,
@@ -138,8 +139,8 @@ def upload_to_facebook(
     video_path: str,
     title: str,
     description: str = "",
-    page_id: str = "",
-    access_token: str = "",
+    page_id: str = os.environ.get("FACEBOOK_PAGE_ID", ""),
+    access_token: str = os.environ.get("FACEBOOK_ACCESS_TOKEN", ""),
     graph_version: str = FACEBOOK_GRAPH_VERSION,
 ) -> str:
     """Upload a video to a Facebook Page.
