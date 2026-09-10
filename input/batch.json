@@ -1,13 +1,57 @@
 [
-{
-"hook": "Ever wonder how cloud computing lets you edit files anywhere without taking up phone storage?",
-"script": [
-"GUEST: [expr:0.4] Petter, where is 'the cloud' actually located when I save my photos online?",
-"HOST: [expr:0.7] The cloud isn't floating in the sky, it's just someone else's giant warehouse of supercomputers! When you tap save",
-"HOST: [expr:0.7] your phone sends your files over the internet to massive, hyper-secure data centers packed with thousands of connected servers operating non-stop.",
-"GUEST: [expr:0.5] So my phone just acts like a remote control for a distant computer?",
-"HOST: [expr:0.8] Spot on! Your local device does almost no heavy lifting. The distant server handles all the storing,",
-"HOST: [expr:0.8] processing, and backup, then streams the finished results straight back to your screen!"
-]
-}
+  {
+    "hook": "Ever wondered why your Wi-Fi dies in the bathroom?",
+    "script": [
+      "GUEST: [expr:0.4] Why does my signal drop the second I close the door?",
+      "HOST: [expr:0.7] Wi-Fi signals hate obstacles, especially thick walls and ceramic tiles.",
+      "GUEST: [expr:0.3] So the tile is blocking my internet feed?",
+      "HOST: [expr:0.6] Exactly, water in pipes and dense materials absorb those radio waves.",
+      "GUEST: [expr:0.4] Is there an easy way to fix that?",
+      "HOST: [expr:0.8] Move your router to a central, high spot in your home."
+    ]
+  },
+  {
+    "hook": "Here is why crypto transactions take so long to process.",
+    "script": [
+      "GUEST: [expr:0.4] Why do I have to wait for my crypto transfer?",
+      "HOST: [expr:0.7] Think of it like a huge line at a bank counter.",
+      "GUEST: [expr:0.3] So everyone is waiting for one teller?",
+      "HOST: [expr:0.6] Every node in the network needs to double check your transaction.",
+      "GUEST: [expr:0.4] That sounds like a total traffic jam.",
+      "HOST: [expr:0.8] It is, but it guarantees nobody can cheat the system."
+    ]
+  },
+  {
+    "hook": "Why does restarting your computer fix almost every glitch?",
+    "script": [
+      "GUEST: [expr:0.4] Why does rebooting actually work every single time?",
+      "HOST: [expr:0.7] Imagine your computer brain gets filled with messy sticky notes.",
+      "GUEST: [expr:0.3] And restarting just throws them all away?",
+      "HOST: [expr:0.6] Spot on, it completely clears your temporary RAM memory.",
+      "GUEST: [expr:0.4] So it gets a fresh clean slate?",
+      "HOST: [expr:0.8] Yes, giving software a clean place to start fresh."
+    ]
+  },
+  {
+    "hook": "What actually happens when you delete a file forever?",
+    "script": [
+      "GUEST: [expr:0.4] Is my file really gone when I hit delete?",
+      "HOST: [expr:0.7] Not right away, the computer just hides the pointer.",
+      "GUEST: [expr:0.3] So the actual data is still sitting there?",
+      "HOST: [expr:0.6] It marks that drive space as available for new stuff.",
+      "GUEST: [expr:0.4] When does it disappear for good then?",
+      "HOST: [expr:0.8] Only when new files write directly over top of it."
+    ]
+  },
+  {
+    "hook": "How open source software builds the entire internet today.",
+    "script": [
+      "GUEST: [expr:0.4] What makes open source code so special anyway?",
+      "HOST: [expr:0.7] It is like a global potluck recipe shared with everyone.",
+      "GUEST: [expr:0.3] Anyone can view and improve the recipe?",
+      "HOST: [expr:0.6] Thousands of developers work together to catch bugs fast.",
+      "GUEST: [expr:0.4] So free code can be super reliable?",
+      "HOST: [expr:0.8] Absolutely, it powers most of the servers on earth."
+    ]
+  }
 ]

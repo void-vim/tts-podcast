@@ -263,8 +263,8 @@ def main() -> None:
         _run_podcast_generation(script_lines, hook, base_name, args, model, sr)
 
         if i < total - 1:
-            log("INFO", "Waiting 60s before next batch item...")
-            time.sleep(60)
+            log("INFO", "Waiting 90s before next batch item...")
+            time.sleep(90)
 
 
 if __name__ == "__main__":
