@@ -26,7 +26,8 @@ pkgs.mkShell {
     source .venv/bin/activate
 
     uv pip install --python .venv/bin/python \
-      chatterbox-tts soundfile torchaudio torch huggingface_hub perth
+      chatterbox-tts soundfile torchaudio torch huggingface_hub perth \
+      google-api-python-client google-auth-oauthlib requests
 
     # Pre-fetch Chatterbox model weights into the HF cache (cached; fast on re-entry)
     python3 -c "from huggingface_hub import snapshot_download; snapshot_download('ResembleAI/chatterbox')" || true
