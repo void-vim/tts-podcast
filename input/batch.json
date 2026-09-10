@@ -1,9 +1,13 @@
 [
 {
-"hook": "Why does cutting a fresh onion make you weep like a movie character?",
+"hook": "Ever wonder how cloud computing lets you edit files anywhere without taking up phone storage?",
 "script": [
-"GUEST: [expr:0.4] Why do onions make me burst into tears every single time I cook?",
-"HOST: [expr:0.6] It's self-defense! When you slice an onion, you rupture its plant cells, mixing quiet enzymes into a stingy chemical gas."
+"GUEST: [expr:0.4] Petter, where is 'the cloud' actually located when I save my photos online?",
+"HOST: [expr:0.7] The cloud isn't floating in the sky, it's just someone else's giant warehouse of supercomputers! When you tap save",
+"HOST: [expr:0.7] your phone sends your files over the internet to massive, hyper-secure data centers packed with thousands of connected servers operating non-stop.",
+"GUEST: [expr:0.5] So my phone just acts like a remote control for a distant computer?",
+"HOST: [expr:0.8] Spot on! Your local device does almost no heavy lifting. The distant server handles all the storing,",
+"HOST: [expr:0.8] processing, and backup, then streams the finished results straight back to your screen!"
 ]
 }
 ]

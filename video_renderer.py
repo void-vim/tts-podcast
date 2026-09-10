@@ -5,6 +5,7 @@ ASS file, and composites it over a looping 9:16 background video via ffmpeg.
 """
 
 import os
+import random
 import subprocess
 
 
@@ -23,7 +24,12 @@ WORDS_PER_CHUNK = 1
 FONT_NAME = "Coolvetica"
 WATERMARK_TEXT = "uncookedtakes"
 
-# Default font dir sits next to this file under input/font/
+ACTIVE_WORD_COLORS = [
+    "&H000000FF",  # Red
+    "&H0000FFFF",  # Yellow
+    "&H0000FF00",  # Green
+    "&H00FFFF00",  # Cyan
+]
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_FONT_DIR = os.path.join(MODULE_DIR, "input", "font")
 
@@ -108,7 +114,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Karaoke,{font},100,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,0,5,10,10,10,1
+Style: Karaoke,{font},100,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,8,0,5,10,10,10,1
 Style: HookText,{font},{hook_fontsize},&H000000,&H000000,&HFFFFFF,&H00000000,-1,0,0,0,100,100,0,0,1,25,0,8,0,0,0,1
 
 [Events]
@@ -127,9 +133,10 @@ def create_ass_file(
 
     words_in_range = [w for w in word_data if w["end"] > start_time and w["start"] < end_time]
     duration = end_time - start_time
+    active_color = random.choice(ACTIVE_WORD_COLORS)
     header = ASS_HEADER.format(font=FONT_NAME, hook_fontsize=HOOK_FONTSIZE)
     events = _build_hook_events(hook_text, duration) if hook_text else []
-    events.extend(_build_karaoke_events(word_data, start_time, end_time, words_in_range))
+    events.extend(_build_karaoke_events(word_data, start_time, end_time, words_in_range, active_color))
 
     with open(ass_path, "w", encoding="utf-8") as f:
         f.write(header)
@@ -172,6 +179,7 @@ def _build_karaoke_events(
     start_time: float,
     end_time: float,
     words_in_range: list[dict],
+    active_color: str = "&H0000FFFF",
 ) -> list[str]:
     events: list[str] = []
     for i in range(0, len(words_in_range), WORDS_PER_CHUNK):
@@ -187,7 +195,7 @@ def _build_karaoke_events(
             for k, w in enumerate(chunk):
                 word_text = escape_ass_text(w["text"].upper())
                 if k == j:
-                    parts.append(f"{{\\c&H0000FFFF&\\fs72}}{word_text}{{\\r}}")
+                    parts.append(f"{{\\c{active_color}&\\fs72}}{word_text}{{\\r}}")
                 else:
                     parts.append(word_text)
             line_text = " ".join(parts)
