@@ -1,57 +1,62 @@
 [
-  {
-    "hook": "Ever wondered why your Wi-Fi dies in the bathroom?",
-    "script": [
-      "GUEST: [expr:0.4] Why does my signal drop the second I close the door?",
-      "HOST: [expr:0.7] Wi-Fi signals hate obstacles, especially thick walls and ceramic tiles.",
-      "GUEST: [expr:0.3] So the tile is blocking my internet feed?",
-      "HOST: [expr:0.6] Exactly, water in pipes and dense materials absorb those radio waves.",
-      "GUEST: [expr:0.4] Is there an easy way to fix that?",
-      "HOST: [expr:0.8] Move your router to a central, high spot in your home."
-    ]
-  },
-  {
-    "hook": "Here is why crypto transactions take so long to process.",
-    "script": [
-      "GUEST: [expr:0.4] Why do I have to wait for my crypto transfer?",
-      "HOST: [expr:0.7] Think of it like a huge line at a bank counter.",
-      "GUEST: [expr:0.3] So everyone is waiting for one teller?",
-      "HOST: [expr:0.6] Every node in the network needs to double check your transaction.",
-      "GUEST: [expr:0.4] That sounds like a total traffic jam.",
-      "HOST: [expr:0.8] It is, but it guarantees nobody can cheat the system."
-    ]
-  },
-  {
-    "hook": "Why does restarting your computer fix almost every glitch?",
-    "script": [
-      "GUEST: [expr:0.4] Why does rebooting actually work every single time?",
-      "HOST: [expr:0.7] Imagine your computer brain gets filled with messy sticky notes.",
-      "GUEST: [expr:0.3] And restarting just throws them all away?",
-      "HOST: [expr:0.6] Spot on, it completely clears your temporary RAM memory.",
-      "GUEST: [expr:0.4] So it gets a fresh clean slate?",
-      "HOST: [expr:0.8] Yes, giving software a clean place to start fresh."
-    ]
-  },
-  {
-    "hook": "What actually happens when you delete a file forever?",
-    "script": [
-      "GUEST: [expr:0.4] Is my file really gone when I hit delete?",
-      "HOST: [expr:0.7] Not right away, the computer just hides the pointer.",
-      "GUEST: [expr:0.3] So the actual data is still sitting there?",
-      "HOST: [expr:0.6] It marks that drive space as available for new stuff.",
-      "GUEST: [expr:0.4] When does it disappear for good then?",
-      "HOST: [expr:0.8] Only when new files write directly over top of it."
-    ]
-  },
-  {
-    "hook": "How open source software builds the entire internet today.",
-    "script": [
-      "GUEST: [expr:0.4] What makes open source code so special anyway?",
-      "HOST: [expr:0.7] It is like a global potluck recipe shared with everyone.",
-      "GUEST: [expr:0.3] Anyone can view and improve the recipe?",
-      "HOST: [expr:0.6] Thousands of developers work together to catch bugs fast.",
-      "GUEST: [expr:0.4] So free code can be super reliable?",
-      "HOST: [expr:0.8] Absolutely, it powers most of the servers on earth."
-    ]
-  }
+{
+"hook": "Why store gift cards lose value slowly",
+"script": [
+"GUEST: [expr:0.4] Why do unused retail gift cards lose purchasing power over time even without expiration fees?",
+"HOST: [expr:0.7] Inflation constantly erodes the real buying power of stored money while prices steadily rise.",
+"HOST: [expr:0.6] That fifty dollar gift card stays fifty dollars on paper, but goods slowly cost more to buy.",
+"HOST: [expr:0.6] Think of leaving an ice cream cone in the sun. The cone stays, but the scoop shrinks.",
+"HOST: [expr:0.7] Spend gift cards quickly rather than holding them like long term savings."
+]
+},
+{
+"hook": "Why subscription free trials demand credit cards",
+"script": [
+"GUEST: [expr:0.3] Why do free software trials require payment details upfront before you even test the product?",
+"HOST: [expr:0.7] Companies rely on consumer inertia and friction to convert free users into paying subscribers.",
+"HOST: [expr:0.6] People forget to cancel, and canceling requires extra effort compared to doing nothing at all.",
+"HOST: [expr:0.6] It is like a gym leaving the front door unlocked but locking the exit door tightly.",
+"HOST: [expr:0.7] Set a calendar reminder immediately after signing up for any free trial."
+]
+},
+{
+"hook": "Why cheap products often cost more money",
+"script": [
+"GUEST: [expr:0.4] How does buying budget products end up costing significantly more money over several years?",
+"HOST: [expr:0.7] Low quality items wear out quickly, forcing you to replace them repeatedly over short periods.",
+"HOST: [expr:0.6] Economists call this the Boots Theory. High quality gear costs more upfront but lasts exponentially longer.",
+"HOST: [expr:0.6] Imagine buying five cheap umbrellas a year versus buying one sturdy umbrella for a decade.",
+"HOST: [expr:0.7] Calculate the cost per use before choosing the absolute cheapest option available."
+]
+},
+{
+"hook": "Why late credit card payments hurt scores",
+"script": [
+"GUEST: [expr:0.4] Why does missing a single credit card payment deadline drop credit scores so drastically?",
+"HOST: [expr:0.7] Payment history makes up thirty five percent of your total credit score algorithm rating.",
+"HOST: [expr:0.6] Lenders view late payments as immediate risk signals, suggesting potential financial distress ahead.",
+"HOST: [expr:0.6] It is like breaking a promise to a friend. Trust takes years to build but seconds to break.",
+"HOST: [expr:0.7] Turn on automatic minimum payments so you never miss a due date."
+]
+},
+{
+"hook": "Why sale discounts trick your brain money",
+"script": [
+"GUEST: [expr:0.3] Why do fifty percent off clearance tags convince people to buy things they never needed?",
+"HOST: [expr:0.7] Retailers use price anchoring to make the discounted price look like an immediate financial gain.",
+"HOST: [expr:0.6] Your brain focuses on saving fifty dollars rather than spending fifty dollars of actual hard cash.",
+"HOST: [expr:0.6] You are not saving money on a sale unless you planned to buy that item anyway.",
+"HOST: [expr:0.7] Focus on total money leaving your account rather than theoretical percentage savings."
+]
+},
+{
+"hook": "Why high interest debt destroys your savings",
+"script": [
+"GUEST: [expr:0.4] Why should you pay off high interest credit cards before investing in stock markets?",
+"HOST: [expr:0.7] High credit card interest rates outpace average stock market investment returns by a wide margin.",
+"HOST: [expr:0.6] Paying off a twenty percent card equals a guaranteed twenty percent return on your money.",
+"HOST: [expr:0.6] It is like filling a bucket with water while a massive hole leaks out the bottom.",
+"HOST: [expr:0.7] Clear your high interest debts completely before putting funds into investment accounts."
+]
+}
 ]
