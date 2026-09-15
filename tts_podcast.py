@@ -223,9 +223,6 @@ def main() -> None:
     args = parse_args()
     validate_assets(args.ref_a, args.ref_b)
 
-    if not args.bg:
-        args.bg = pick_random_bg()
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     log("INFO", f"Loading Chatterbox on device={args.device}")
@@ -260,7 +257,13 @@ def main() -> None:
         base_name = sanitize_filename(hook) if hook else f"batch_{i+1}"
         log("INFO", f"Batch item {i+1}/{total}: {base_name}")
 
-        _run_podcast_generation(script_lines, hook, base_name, args, model, sr)
+        if not args.bg:
+            bg_for_item = pick_random_bg()
+        else:
+            bg_for_item = args.bg
+        item_args = argparse.Namespace(**vars(args), bg=bg_for_item)
+
+        _run_podcast_generation(script_lines, hook, base_name, item_args, model, sr)
 
         if i < total - 1:
             log("INFO", "Waiting 90s before next batch item...")
